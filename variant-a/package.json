@@ -1,0 +1,24 @@
+{
+  "name": "variant-a-chatbot",
+  "version": "1.0.0",
+  "description": "Simple FAQ-based customer service chatbot using OpenAI GPT-4o-mini",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "chatbot",
+    "customer-service",
+    "openai",
+    "faq"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "openai": "^4.28.0",
+    "dotenv": "^16.4.5"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "variant-b-structured-chatbot",
+  "version": "1.0.0",
+  "description": "Customer service chatbot with structured JSON output and validation",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test src/**/*.test.js"
+  },
+  "keywords": [
+    "chatbot",
+    "openai",
+    "express",
+    "validation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "dotenv": "^16.3.1",
+    "openai": "^4.20.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.4"
+  }
+}

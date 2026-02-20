@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Service Chatbot - Variant C</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 800px;
+      height: 700px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    .chat-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      background: #f8f9fa;
+    }
+
+    .message {
+      margin-bottom: 16px;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.user {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .message.assistant {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .message-content {
+      max-width: 70%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      line-height: 1.5;
+      font-size: 15px;
+    }
+
+    .message.user .message-content {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message.assistant .message-content {
+      background: white;
+      color: #333;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .tools-used {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #666;
+      font-style: italic;
+    }
+
+    .tools-used span {
+      background: #e9ecef;
+      padding: 2px 8px;
+      border-radius: 8px;
+      margin-right: 4px;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    .input-area {
+      padding: 20px;
+      background: white;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .input-form {
+      display: flex;
+      gap: 12px;
+    }
+
+    .input-form input {
+      flex: 1;
+      padding: 14px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 15px;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    .input-form input:focus {
+      border-color: #667eea;
+    }
+
+    .input-form button {
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .input-form button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .input-form button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: white;
+      border-radius: 16px;
+      width: fit-content;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .typing-indicator span {
+      width: 8px;
+      height: 8px;
+      background: #667eea;
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out;
+    }
+
+    .typing-indicator span:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+
+    .typing-indicator span:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+
+    @keyframes bounce {
+      0%, 80%, 100% {
+        transform: scale(0);
+        opacity: 0.5;
+      }
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .error-message {
+      background: #fee;
+      color: #c33;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .conversation-id {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 8px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🤖 Customer Service Assistant</h1>
+      <p>Powered by OpenAI GPT-4o-mini with tool-calling capabilities</p>
+      <div class="badge">Variant C: Tool-Using Agent</div>
+      <div class="conversation-id" id="conversationIdDisplay"></div>
+    </div>
+
+    <div class="chat-area" id="chatArea">
+      <div class="message assistant">
+        <div class="message-content">
+          Hello! I'm your AI customer service assistant. I can help you with:
+          <br><br>
+          • Product and policy information (returns, shipping, payments, etc.)
+          <br>
+          • Account lookups and order status
+          <br>
+          • Escalating complex issues to human agents
+          <br><br>
+          How can I assist you today?
+        </div>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <form class="input-form" id="chatForm">
+        <input
+          type="text"
+          id="messageInput"
+          placeholder="Type your message here..."
+          autocomplete="off"
+          required
+        />
+        <button type="submit" id="sendButton">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const chatArea = document.getElementById('chatArea');
+    const chatForm = document.getElementById('chatForm');
+    const messageInput = document.getElementById('messageInput');
+    const sendButton = document.getElementById('sendButton');
+    const conversationIdDisplay = document.getElementById('conversationIdDisplay');
+
+    let conversationId = null;
+    let isProcessing = false;
+
+    // Initialize
+    conversationIdDisplay.textContent = 'Starting new conversation...';
+
+    // Handle form submission
+    chatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const message = messageInput.value.trim();
+      if (!message || isProcessing) return;
+
+      // Add user message to chat
+      addMessage('user', message);
+
+      // Clear input
+      messageInput.value = '';
+      isProcessing = true;
+      sendButton.disabled = true;
+
+      // Show typing indicator
+      const typingIndicator = showTypingIndicator();
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message,
+            conversationId
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to send message');
+        }
+
+        // Update conversation ID
+        if (!conversationId) {
+          conversationId = data.conversationId;
+          conversationIdDisplay.textContent = `Conversation: ${conversationId}`;
+        }
+
+        // Remove typing indicator
+        typingIndicator.remove();
+
+        // Add assistant response
+        addMessage('assistant', data.response, data.toolsUsed);
+
+      } catch (error) {
+        console.error('Error:', error);
+        typingIndicator.remove();
+        showError(error.message);
+      } finally {
+        isProcessing = false;
+        sendButton.disabled = false;
+        messageInput.focus();
+      }
+    });
+
+    function addMessage(role, content, toolsUsed = []) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${role}`;
+
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'message-content';
+      contentDiv.textContent = content;
+
+      messageDiv.appendChild(contentDiv);
+
+      // Add tools used indicator for assistant messages
+      if (role === 'assistant' && toolsUsed && toolsUsed.length > 0) {
+        const toolsDiv = document.createElement('div');
+        toolsDiv.className = 'tools-used';
+        toolsDiv.innerHTML = 'Tools used: ' + toolsUsed.map(tool =>
+          `<span>${tool.replace('_', ' ')}</span>`
+        ).join('');
+        contentDiv.appendChild(toolsDiv);
+      }
+
+      chatArea.appendChild(messageDiv);
+      chatArea.scrollTop = chatArea.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'message assistant';
+
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'typing-indicator';
+      typingDiv.innerHTML = '<span></span><span></span><span></span>';
+
+      messageDiv.appendChild(typingDiv);
+      chatArea.appendChild(messageDiv);
+      chatArea.scrollTop = chatArea.scrollHeight;
+
+      return messageDiv;
+    }
+
+    function showError(message) {
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'error-message';
+      errorDiv.textContent = `Error: ${message}`;
+      chatArea.appendChild(errorDiv);
+      chatArea.scrollTop = chatArea.scrollHeight;
+
+      // Auto-remove after 5 seconds
+      setTimeout(() => errorDiv.remove(), 5000);
+    }
+
+    // Focus input on load
+    messageInput.focus();
+  </script>
+</body>
+</html>
