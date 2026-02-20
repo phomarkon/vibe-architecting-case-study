@@ -1,6 +1,4 @@
-# Supplementary Material: Architecture Without Architects
-
-Case study code for the paper *"Architecture Without Architects: How AI Coding Agents Shape Software Architecture"* (SAGAI 2026, co-located with ICSA 2026).
+# Vibe Architecting Case Study
 
 Three customer service chatbot variants, each generated from a single prompt by an AI coding agent. Same task, same runtime LLM (GPT-4o-mini), different prompt specifications. The results: structurally different systems ranging from 141 to 827 lines of code.
 
